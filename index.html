@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>以诺语翻译器</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="以诺语（Enochian）在线翻译器：中文、英文与以诺语互译，以诺字母转写，词汇取自约翰·迪伊记录的十九篇召唤。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;1,400&family=IM+Fell+English:ital@0;1&family=Noto+Serif+SC:wght@600&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <p class="eyebrow">Lingua Angelica · 天使之语</p>
+    <h1>以诺语翻译器<span class="latin">Enochian Translator</span></h1>
+    <p class="lede">中文、英文与以诺语逐词互译，并以以诺字母书写。词汇全部取自约翰·迪伊 1584 年记录的十九篇召唤，字形依据他 1583 年的手稿重绘。</p>
+    <div class="alphabet-band" id="alphabet-band" aria-hidden="true"></div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="功能">
+  <div class="wrap" role="tablist">
+    <button class="tab" role="tab" id="tab-translate" aria-controls="translate" aria-selected="true" data-view="translate">翻译</button>
+    <button class="tab" role="tab" id="tab-alphabet" aria-controls="alphabet" aria-selected="false" data-view="alphabet">字母表</button>
+    <button class="tab" role="tab" id="tab-lexicon" aria-controls="lexicon" aria-selected="false" data-view="lexicon">词典</button>
+    <button class="tab" role="tab" id="tab-about" aria-controls="about" aria-selected="false" data-view="about">说明</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <section class="panel" id="translate" role="tabpanel" aria-labelledby="tab-translate">
+    <div class="desk">
+      <div class="pane">
+        <div class="pane-head">
+          <label class="label" for="direction">翻译方向</label>
+          <select id="direction">
+            <option value="auto">自动识别</option>
+            <option value="zh">中文 → 以诺语</option>
+            <option value="en">英文 → 以诺语</option>
+            <option value="enochian-zh">以诺语 → 中文</option>
+            <option value="enochian-en">以诺语 → 英文</option>
+            <option value="latin">拉丁字母 → 以诺字母（仅转写）</option>
+          </select>
+        </div>
+        <textarea id="source" spellcheck="false" aria-label="原文" placeholder="输入中文、英文或以诺语，例如：看哪，光明与真理"></textarea>
+        <div class="examples" id="examples">
+          <span class="label">示例</span>
+        </div>
+      </div>
+
+      <div class="pane mirror" aria-live="polite">
+        <div class="pane-head">
+          <span class="label" id="direction-label">译文</span>
+          <label class="switch" for="rtl"><input type="checkbox" id="rtl" checked> 从右向左书写</label>
+        </div>
+        <div class="script" id="script" dir="rtl"></div>
+        <p class="output-text" id="output"></p>
+        <div class="actions">
+          <button class="btn" type="button" id="copy-text">复制译文</button>
+          <button class="btn" type="button" id="copy-svg">复制以诺文 SVG</button>
+          <span class="status" id="status" role="status"></span>
+        </div>
+      </div>
+    </div>
+
+    <section class="gloss" aria-labelledby="gloss-title">
+      <h2 class="section-title" id="gloss-title">逐词对照<small>interlinear gloss</small></h2>
+      <ol class="interlinear" id="interlinear"></ol>
+      <p class="notes" id="notes"></p>
+    </section>
+  </section>
+
+  <section class="panel" id="alphabet" role="tabpanel" aria-labelledby="tab-alphabet" hidden>
+    <h2 class="section-title">二十一个以诺字母<small>after Dee, Sloane MS 3188</small></h2>
+    <div class="compose">
+      <input id="compose" type="text" autocomplete="off" spellcheck="false" aria-label="拼写" placeholder="点下方字母或直接输入拉丁字母" value="madriax">
+      <div class="actions">
+        <button class="btn" type="button" id="compose-back">退格</button>
+        <button class="btn" type="button" id="compose-clear">清空</button>
+        <button class="btn" type="button" id="compose-send">翻译这段</button>
+      </div>
+      <div class="script on-paper compose-out" id="compose-out" dir="rtl"></div>
+    </div>
+    <div class="letters" id="letters"></div>
+  </section>
+
+  <section class="panel" id="lexicon" role="tabpanel" aria-labelledby="tab-lexicon" hidden>
+    <h2 class="section-title">以诺语词典<small>from the nineteen Keys</small></h2>
+    <div class="filters">
+      <input id="lex-query" type="search" autocomplete="off" aria-label="搜索词典" placeholder="搜索以诺词、英文或中文释义">
+      <select id="lex-key" aria-label="按召唤筛选">
+        <option value="">全部召唤</option>
+      </select>
+      <span class="count" id="lex-count"></span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>以诺文</th><th>拼写</th><th>迪伊英译</th><th>中文</th><th>词性</th><th>出处</th></tr>
+        </thead>
+        <tbody id="lex-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel" id="about" role="tabpanel" aria-labelledby="tab-about" hidden>
+    <div class="prose">
+      <h2 class="section-title">关于以诺语<small>Enochian</small></h2>
+      <p>以诺语是伊丽莎白一世的宫廷学者<strong>约翰·迪伊</strong>（John Dee）与通灵者<strong>爱德华·凯利</strong>（Edward Kelley）在 16 世纪 80 年代的“天使对话”中记录下来的语言，二人称它是天使所授、亚当在伊甸园中使用的语言。字母表记录于 1583 年；1584 年他们在克拉科夫记下了十九篇韵文般的“召唤”（<span class="en">Angelic Keys</span>），迪伊为其中绝大多数词写下了逐词英译。</p>
+
+      <h3>翻译是怎样做的</h3>
+      <p>以诺语的语法所知甚少，能确定词义的语料几乎只有这十九篇召唤，所以本工具做的是<strong>逐词对照</strong>：</p>
+      <ul>
+        <li>词典共 <span id="about-count">600 余</span> 条，全部出自十九篇召唤。英文释义沿用迪伊的原注，中文释义为本项目所译，“出处”一栏标出词条所在的召唤。</li>
+        <li>中文、英文译成以诺语时，按最长匹配查词典的释义；词典中没有的词，若是拉丁字母就按字母音译，并在逐词对照里用虚线框标出。</li>
+        <li>以诺语译成中文、英文时，查不到的词会尝试拆成几个已知词，比如 <span class="en">odzamran</span> = <span class="en">od</span>（和）+ <span class="en">zamran</span>（显现）。</li>
+        <li>译文基本保持原句语序，只把中文“甲的乙”调整为以诺语常见的“乙 de 甲”，并把 <span class="en">oiad</span>（神的）这类属格词放到名词之后，如 <span class="en">busdir oiad</span>“神的荣耀”。</li>
+      </ul>
+
+      <h3>字母与书写方向</h3>
+      <p>以诺字母共 21 个，每个都有名称。手稿中以诺文<strong>从右向左</strong>书写，本工具默认如此，可在译文区关闭。与拉丁字母的对应关系：</p>
+      <ul class="equiv" id="equiv"></ul>
+      <p>以诺字母没有专门的数字，阿拉伯数字会原样保留。</p>
+
+      <h3>局限</h3>
+      <p>结果只是基于有限语料的近似，不是“标准答案”。迪伊手稿中同一个词常有几种拼法（u 与 v、i 与 y 互换），后世研究者对词义也有分歧；查词时本工具会把这些拼法视为同一个词。词典里没有的现代词汇（如“爱”“你好”）无法真正翻译，人名、地名请输入拼音或英文，以字母音译。</p>
+
+      <h3>来源</h3>
+      <ul>
+        <li>字形：依据大英图书馆藏迪伊手稿 Sloane MS 3188（1583 年）中的字母表重新绘制。</li>
+        <li>词汇：十九篇以诺召唤及迪伊的逐词英译，见迪伊手稿《48 Claves Angelicae》（大英图书馆 Sloane MS 3191）与 1584 年的通灵记录（Cotton Appendix XLVI）。</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">以诺语翻译器 · 开源于 <a href="https://github.com/YuanZHAO321/Enochian" target="_blank" rel="noopener">GitHub</a> · 字形与词汇均来自已进入公有领域的 16 世纪手稿</div>
+</footer>
+
+<script src="src/alphabet.js"></script>
+<script src="src/lexicon.js"></script>
+<script src="src/translator.js"></script>
+<script src="src/app.js"></script>
+</body>
+</html>

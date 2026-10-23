@@ -1,0 +1,17 @@
+{
+  "name": "enochian-translator",
+  "version": "1.0.0",
+  "description": "以诺语翻译器：中文、英文与以诺语逐词互译，以诺字母书写（Enochian translator）",
+  "main": "src/translator.js",
+  "scripts": {
+    "test": "node --test",
+    "start": "npx --yes http-server -p 8080 -c-1 ."
+  },
+  "keywords": [
+    "enochian",
+    "john-dee",
+    "translator",
+    "以诺语"
+  ],
+  "private": true
+}
